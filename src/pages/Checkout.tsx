@@ -1,43 +1,38 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '@/components/Header';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCart } from '@/contexts/CartContext';
-import { stores } from '@/data/seed';
 import { toast } from 'sonner';
+
+const locations = [
+  'ТЦ Мега, ул. Ватутина 107',
+  'Красный проспект 99',
+  'Площадь Ленина 1',
+  'ул. Кирова 44',
+];
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cart, getTotalPrice, clearCart } = useCart();
   const [phone, setPhone] = useState('');
-  const [storeId, setStoreId] = useState('');
-  const [pickupTime, setPickupTime] = useState('');
-  const [note, setNote] = useState('');
-
-  const activeStores = stores.filter((s) => s.isActive);
+  const [location, setLocation] = useState('');
+  const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!phone || !storeId || !pickupTime) {
-      toast.error('Заполните все обязательные поля');
+    if (!phone || !location || !name) {
+      toast.error('Заполните все поля');
       return;
     }
 
     const orderId = Math.random().toString(36).substring(2, 9).toUpperCase();
-    const store = activeStores.find((s) => s.id === storeId);
-
     clearCart();
-    toast.success(`Заказ #${orderId} оформлен!`);
-
-    navigate('/order-success', {
-      state: { orderId, storeName: store?.name, pickupTime },
-    });
+    toast.success(`Заказ ${orderId} оформлен`);
+    navigate('/order-success', { state: { orderId } });
   };
 
   if (cart.length === 0) {
@@ -45,122 +40,105 @@ export default function Checkout() {
     return null;
   }
 
-  const times = [
-    'Как можно скорее',
-    'Через 15 минут',
-    'Через 30 минут',
-    'Через 1 час',
-    'Через 2 часа',
-  ];
-
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="flex items-center justify-between">
+            <Link to="/" className="text-xl font-semibold">
+              Хот-дог Мастер
+            </Link>
+            <div className="flex gap-6 text-sm">
+              <Link to="/menu" className="hover:underline">
+                Меню
+              </Link>
+              <Link to="/locations" className="hover:underline">
+                Адреса
+              </Link>
+              <Link to="/about" className="hover:underline">
+                О нас
+              </Link>
+            </div>
+          </nav>
+        </div>
+      </header>
 
-      <section className="py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-black mb-8">Оформление заказа</h1>
+      <main className="flex-1 py-12">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <h1 className="text-4xl font-semibold mb-8">Оформление</h1>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="p-6">
-              <h2 className="text-2xl font-black mb-6">Ваш заказ</h2>
-              <div className="space-y-3 mb-6">
+          <div className="space-y-8">
+            <div className="border rounded-lg p-6">
+              <h2 className="font-semibold mb-4">Ваш заказ</h2>
+              <div className="space-y-2 mb-4">
                 {cart.map((item) => (
                   <div key={item.refId} className="flex justify-between text-sm">
                     <span>
                       {item.name} × {item.qty}
                     </span>
-                    <span className="font-bold">{item.price * item.qty} ₽</span>
+                    <span>{item.price * item.qty} ₽</span>
                   </div>
                 ))}
               </div>
-              <div className="border-t pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-xl font-black">Итого:</span>
-                  <span className="text-3xl font-black text-primary">{getTotalPrice()} ₽</span>
-                </div>
+              <div className="border-t pt-4 flex justify-between font-semibold">
+                <span>Итого:</span>
+                <span>{getTotalPrice()} ₽</span>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-6">
-              <h2 className="text-2xl font-black mb-6">Данные для самовывоза</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="phone" className="font-bold">
-                    Телефон *
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+7 (999) 123-45-67"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="rounded-xl"
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="name">Имя</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  placeholder="Ваше имя"
+                />
+              </div>
 
-                <div>
-                  <Label htmlFor="store" className="font-bold">
-                    Точка самовывоза *
-                  </Label>
-                  <Select value={storeId} onValueChange={setStoreId} required>
-                    <SelectTrigger id="store" className="rounded-xl">
-                      <SelectValue placeholder="Выберите адрес" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {activeStores.map((store) => (
-                        <SelectItem key={store.id} value={store.id}>
-                          {store.address}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div>
+                <Label htmlFor="phone">Телефон</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  placeholder="+7 (999) 123-45-67"
+                />
+              </div>
 
-                <div>
-                  <Label htmlFor="time" className="font-bold">
-                    Время самовывоза *
-                  </Label>
-                  <Select value={pickupTime} onValueChange={setPickupTime} required>
-                    <SelectTrigger id="time" className="rounded-xl">
-                      <SelectValue placeholder="Когда заберёте?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {times.map((time) => (
-                        <SelectItem key={time} value={time}>
-                          {time}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div>
+                <Label htmlFor="location">Точка самовывоза</Label>
+                <Select value={location} onValueChange={setLocation} required>
+                  <SelectTrigger id="location">
+                    <SelectValue placeholder="Выберите адрес" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locations.map((loc) => (
+                      <SelectItem key={loc} value={loc}>
+                        {loc}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-                <div>
-                  <Label htmlFor="note" className="font-bold">
-                    Комментарий к заказу
-                  </Label>
-                  <Textarea
-                    id="note"
-                    placeholder="Например: без лука, добавить больше соуса..."
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    className="rounded-xl"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 font-bold text-lg py-6 rounded-xl"
-                >
-                  Подтвердить заказ
-                </Button>
-              </form>
-            </Card>
+              <Button type="submit" size="lg" className="w-full">
+                Подтвердить заказ
+              </Button>
+            </form>
           </div>
         </div>
-      </section>
+      </main>
+
+      <footer className="border-t py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          © 2025 Хот-дог Мастер
+        </div>
+      </footer>
     </div>
   );
 }

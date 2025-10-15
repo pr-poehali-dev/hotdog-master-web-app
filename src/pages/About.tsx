@@ -1,69 +1,58 @@
-import { Header } from '@/components/Header';
-import { Card } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-
-      <section className="py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-black mb-8 text-center">О нас</h1>
-
-          <Card className="p-8 md:p-12 space-y-6">
-            <div>
-              <h2 className="text-3xl font-black mb-4 text-primary">Хот-дог Мастер</h2>
-              <p className="text-lg leading-relaxed">
-                С 1999 года мы радуем жителей Новосибирска вкусными и сытными хот-догами. 
-                Начав с одного киоска на Центральном рынке, сегодня мы выросли до сети из 
-                16 точек по всему городу.
-              </p>
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="flex items-center justify-between">
+            <Link to="/" className="text-xl font-semibold">
+              Хот-дог Мастер
+            </Link>
+            <div className="flex gap-6 text-sm">
+              <Link to="/menu" className="hover:underline">
+                Меню
+              </Link>
+              <Link to="/locations" className="hover:underline">
+                Адреса
+              </Link>
+              <Link to="/about" className="underline">
+                О нас
+              </Link>
             </div>
-
-            <div>
-              <h3 className="text-2xl font-black mb-3">Наша философия</h3>
-              <p className="text-lg leading-relaxed">
-                Горячо. Быстро. По-классике. Это не просто слоган — это наш подход к работе. 
-                Мы используем только качественные ингредиенты, готовим на заказ и всегда 
-                стремимся сделать ваш день немного вкуснее.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-black mb-3">Почему выбирают нас?</h3>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-start gap-3">
-                  <span className="text-2xl">🌭</span>
-                  <span>Молочные сосиски высшего качества</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-2xl">⚡</span>
-                  <span>Быстрое обслуживание — готовим за 2-3 минуты</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-2xl">💰</span>
-                  <span>Доступные цены без потери качества</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-2xl">📍</span>
-                  <span>16 точек — всегда найдётся рядом с вами</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-2xl">🎯</span>
-                  <span>25+ лет опыта и традиций</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-xl">
-              <p className="text-lg font-semibold text-center">
-                "Хот-дог Мастер" — это не просто фастфуд, это частичка Новосибирска, 
-                которая согревает и насыщает уже более 25 лет! 🌭
-              </p>
-            </div>
-          </Card>
+          </nav>
         </div>
-      </section>
+      </header>
+
+      <main className="flex-1 py-12">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h1 className="text-4xl font-semibold mb-8">О нас</h1>
+
+          <div className="prose prose-lg max-w-none space-y-6">
+            <p className="text-muted-foreground leading-relaxed">
+              С 1999 года мы готовим хот-доги для жителей Новосибирска. Начав с одного киоска
+              на Центральном рынке, сегодня у нас 16 точек по всему городу.
+            </p>
+
+            <p className="text-muted-foreground leading-relaxed">
+              Мы используем качественные ингредиенты, готовим быстро и всегда рады
+              нашим гостям. Горячо, вкусно, по-классике — это про нас.
+            </p>
+
+            <div className="border-l-4 border-primary pl-6 my-8">
+              <p className="text-lg">
+                «Хот-дог Мастер» — это часть Новосибирска, которая согревает и радует уже 25 лет
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer className="border-t py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          © 2025 Хот-дог Мастер
+        </div>
+      </footer>
     </div>
   );
 }

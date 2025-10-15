@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { useCart } from '@/contexts/CartContext';
 import Icon from '@/components/ui/icon';
 
@@ -10,99 +8,137 @@ export default function Cart() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
-        <Header />
-        <section className="py-24">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-md mx-auto space-y-6">
-              <div className="text-8xl">🛒</div>
-              <h1 className="text-3xl font-black">Корзина пуста</h1>
-              <p className="text-lg text-muted-foreground">
-                Добавьте хот-доги из меню, чтобы продолжить
-              </p>
-              <Link to="/menu">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 font-bold text-lg px-8 py-6 rounded-xl">
-                  Перейти в меню
-                </Button>
+      <div className="min-h-screen flex flex-col">
+        <header className="border-b">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="text-xl font-semibold">
+                Хот-дог Мастер
               </Link>
-            </div>
+              <div className="flex gap-6 text-sm">
+                <Link to="/menu" className="hover:underline">
+                  Меню
+                </Link>
+                <Link to="/locations" className="hover:underline">
+                  Адреса
+                </Link>
+                <Link to="/about" className="hover:underline">
+                  О нас
+                </Link>
+              </div>
+            </nav>
           </div>
-        </section>
+        </header>
+
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-6">
+            <p className="text-4xl">🛒</p>
+            <h1 className="text-2xl font-semibold">Корзина пуста</h1>
+            <Link to="/menu">
+              <Button>Перейти в меню</Button>
+            </Link>
+          </div>
+        </main>
+
+        <footer className="border-t py-8">
+          <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+            © 2025 Хот-дог Мастер
+          </div>
+        </footer>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="flex items-center justify-between">
+            <Link to="/" className="text-xl font-semibold">
+              Хот-дог Мастер
+            </Link>
+            <div className="flex gap-6 text-sm">
+              <Link to="/menu" className="hover:underline">
+                Меню
+              </Link>
+              <Link to="/locations" className="hover:underline">
+                Адреса
+              </Link>
+              <Link to="/about" className="hover:underline">
+                О нас
+              </Link>
+            </div>
+          </nav>
+        </div>
+      </header>
 
-      <section className="py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-black mb-8">Корзина</h1>
+      <main className="flex-1 py-12">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h1 className="text-4xl font-semibold mb-8">Корзина</h1>
 
-          <div className="space-y-4 mb-8">
+          <div className="space-y-3 mb-8">
             {cart.map((item) => (
-              <Card key={item.refId} className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl">
-                    {item.type === 'hotdog' && '🌭'}
-                    {item.type === 'drink' && '🥤'}
-                    {item.type === 'addon' && '🧂'}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-black">{item.name}</h3>
-                    <p className="text-muted-foreground">{item.price} ₽</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={() => updateQuantity(item.refId, item.qty - 1)}
-                      className="rounded-lg"
-                    >
-                      <Icon name="Minus" size={16} />
-                    </Button>
-                    <span className="w-8 text-center font-bold text-lg">{item.qty}</span>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={() => updateQuantity(item.refId, item.qty + 1)}
-                      className="rounded-lg"
-                    >
-                      <Icon name="Plus" size={16} />
-                    </Button>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-black text-primary">
-                      {item.price * item.qty} ₽
-                    </p>
-                  </div>
+              <div
+                key={item.refId}
+                className="flex items-center gap-4 p-4 border rounded-lg"
+              >
+                <div className="flex-1">
+                  <h3 className="font-medium">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground">{item.price} ₽</p>
+                </div>
+                <div className="flex items-center gap-2">
                   <Button
                     size="icon"
-                    variant="ghost"
-                    onClick={() => removeFromCart(item.refId)}
-                    className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                    variant="outline"
+                    onClick={() => updateQuantity(item.refId, item.qty - 1)}
+                    className="h-8 w-8"
                   >
-                    <Icon name="Trash2" size={20} />
+                    <Icon name="Minus" size={14} />
+                  </Button>
+                  <span className="w-8 text-center text-sm font-medium">{item.qty}</span>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => updateQuantity(item.refId, item.qty + 1)}
+                    className="h-8 w-8"
+                  >
+                    <Icon name="Plus" size={14} />
                   </Button>
                 </div>
-              </Card>
+                <div className="text-right min-w-[80px]">
+                  <p className="font-semibold">{item.price * item.qty} ₽</p>
+                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => removeFromCart(item.refId)}
+                  className="h-8 w-8"
+                >
+                  <Icon name="X" size={16} />
+                </Button>
+              </div>
             ))}
           </div>
 
-          <Card className="p-6 bg-muted">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-2xl font-black">Итого:</span>
-              <span className="text-4xl font-black text-primary">{getTotalPrice()} ₽</span>
+          <div className="border-t pt-6 space-y-4">
+            <div className="flex items-center justify-between text-xl">
+              <span className="font-semibold">Итого:</span>
+              <span className="font-semibold">{getTotalPrice()} ₽</span>
             </div>
             <Link to="/checkout" className="block">
-              <Button size="lg" className="w-full bg-primary hover:bg-primary/90 font-bold text-lg py-6 rounded-xl">
-                К оформлению
+              <Button className="w-full" size="lg">
+                Оформить заказ
               </Button>
             </Link>
-          </Card>
+          </div>
         </div>
-      </section>
+      </main>
+
+      <footer className="border-t py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          © 2025 Хот-дог Мастер
+        </div>
+      </footer>
     </div>
   );
 }
